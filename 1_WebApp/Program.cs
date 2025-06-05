@@ -38,7 +38,7 @@ app.Run(async (HttpContext context) =>
         if (context.Request.Path.StartsWithSegments("/employees"))
         {
             using var reader = new StreamReader(context.Request.Body);
-            string body = await reader.ReadToEndAsync();                            // json
+            string body = await reader.ReadToEndAsync();                            // json string
             Employee? employee = JsonSerializer.Deserialize<Employee>(body);
             if (employee != null) 
             { 
@@ -47,11 +47,62 @@ app.Run(async (HttpContext context) =>
             }
             else
             {
-                await context.Response.WriteAsync($"\r\nError - Unable to Deserialize employee from HTTP Body");
+                await context.Response.WriteAsync($"\r\nError - Unable to Deserialize employee from HTTP Body - Create");
             }
         }
     }
-    
+    else if (context.Request.Method == "PUT")
+    {
+        if (context.Request.Path.StartsWithSegments("/employees"))
+        {
+            using var reader = new StreamReader(context.Request.Body);
+            string body = await reader.ReadToEndAsync();                            // json string
+            Employee? employee = JsonSerializer.Deserialize<Employee>(body);
+            if (employee != null)
+            {
+                if (EmployeesRepository.FindById(employee.Id) == null)
+                {                    
+                    await context.Response.WriteAsync($"\r\nError - {employee.Id}: ID valued employee unavailable");
+                }
+                else
+                {
+                    EmployeesRepository.UpdateEmployee(employee);
+                    await context.Response.WriteAsync($"\r\n{employee.Name}: {employee.Position} Updated");
+                }                
+            }
+            else
+            {
+                await context.Response.WriteAsync($"\r\nError - Unable to Deserialize employee from HTTP Body - Update");
+            }
+        }
+    }
+    else if (context.Request.Method == "DELETE")
+    {
+        if (context.Request.Path.StartsWithSegments("/employees"))
+        {          
+            if (context.Request.Query.ContainsKey("id") && 
+                int.TryParse(context.Request.Query["id"], out int id))
+            {
+                var employee = EmployeesRepository.FindById(id);
+                if (employee == null)
+                {
+                    await context.Response.WriteAsync($"\r\nError - {id}: ID valued employee unavailable");
+                }
+                else
+                {
+                    EmployeesRepository.DeleteEmployee(id);
+                    await context.Response.WriteAsync($"\r\n{employee.Name}: {employee.Position} Deleted");
+                }
+            }
+            else
+            {
+                await context.Response.WriteAsync($"\r\nError - Unable to extract ID value from query string - DELETE");
+            }
+        }
+    }
+
+
+
 });
 
 app.Run();                                              // starts the Kestral server, host the application on it
@@ -68,6 +119,25 @@ static class EmployeesRepository
 
     public static List<Employee> GetEmployees() => employees;
     public static void AddEmployee(Employee employee) => employees.Add(employee);
+    public static void UpdateEmployee(Employee employee)
+    {
+        var employeeToUpdate = FindById(employee.Id);
+        if (employeeToUpdate != null)
+        {
+            employeeToUpdate.Name = employee.Name;
+            employeeToUpdate.Position = employee.Position;
+            employeeToUpdate.Salary = employee.Salary;
+        }
+    }
+
+    public static Employee? FindById(int id) => employees.SingleOrDefault(x => x.Id == id);
+
+    public static void DeleteEmployee(int id)
+    {
+        var employee = FindById(id);
+        if (employee != null)
+            employees.Remove(employee);
+    }
 }
 
 public class Employee
