@@ -79,8 +79,12 @@ app.Run(async (HttpContext context) =>
     else if (context.Request.Method == "DELETE")
     {
         if (context.Request.Path.StartsWithSegments("/employees"))
-        {          
-            if (context.Request.Query.ContainsKey("id") && 
+        {        
+            if (context.Request.Headers["Authorization"] != "Buddhika")
+            {
+                await context.Response.WriteAsync($"\r\nError - You are unauthorised to DELETE");                
+            }
+            else if (context.Request.Query.ContainsKey("id") &&
                 int.TryParse(context.Request.Query["id"], out int id))
             {
                 var employee = EmployeesRepository.FindById(id);
