@@ -28,11 +28,32 @@ app.Run(async (HttpContext context) =>
         {
             case "GET":
             {
-                await context.Response.WriteAsync("GET /employees\r\n");
-                foreach (var emp in EmployeesRepository.GetEmployees())
+                if (context.Request.Query.ContainsKey("id") &&
+                    int.TryParse(context.Request.Query["id"], out int id))
                 {
-                    await context.Response.WriteAsync($"{emp.Name}: {emp.Position}\r\n");
+                    var employee = EmployeesRepository.FindById(id);
+                    if (employee == null)
+                    {
+                        context.Response.StatusCode = 404;
+                        await context.Response.WriteAsync($"GET /employees?id={id}\r\n");
+                        await context.Response.WriteAsync("Employee with such ID not found");
+                    }
+                    else
+                    {
+                        context.Response.StatusCode = 200;
+                        await context.Response.WriteAsync($"GET /employees?id={id}\r\n");
+                        await context.Response.WriteAsync($"{employee.Name}: {employee.Position}\r\n");
+                    }
                 }
+                else
+                {
+                    context.Response.StatusCode = 200;
+                    await context.Response.WriteAsync("GET /employees\r\n");
+                    foreach (var emp in EmployeesRepository.GetEmployees())
+                    {
+                        await context.Response.WriteAsync($"{emp.Name}: {emp.Position}\r\n");
+                    }
+                }                
                 break;
             }
             case "POST":
@@ -43,10 +64,11 @@ app.Run(async (HttpContext context) =>
                 if (employee != null)
                 {
                     EmployeesRepository.AddEmployee(employee);
-                    await context.Response.WriteAsync($"\r\n{employee.Name}: {employee.Position} Added");
+                    context.Response.StatusCode = 201;
+                    await context.Response.WriteAsync($"\r\n{employee.Name}: {employee.Position} Added");                    
                 }
                 else
-                {
+                {                    
                     await context.Response.WriteAsync($"\r\nError - Unable to Deserialize employee from HTTP Body - Create");
                 }
                 break;
@@ -60,7 +82,8 @@ app.Run(async (HttpContext context) =>
                 {
                     if (EmployeesRepository.FindById(employee.Id) == null)
                     {
-                        await context.Response.WriteAsync($"\r\nError - {employee.Id}: ID valued employee unavailable");
+                        context.Response.StatusCode = 204;
+                        await context.Response.WriteAsync($"\r\nError - {employee.Id}: ID valued employee unavailable");                        
                     }
                     else
                     {
