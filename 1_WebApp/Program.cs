@@ -17,95 +17,103 @@ var app = builder.Build();                              // create web applicatio
 //});
 
 app.Run(async (HttpContext context) =>
-{
-    if (context.Request.Method == "GET")
+{  
+    if (context.Request.Path.StartsWithSegments("/"))
     {
-        if (context.Request.Path.StartsWithSegments("/"))
-        {
-            await context.Response.WriteAsync("GET /");
-        }
-        else if (context.Request.Path.StartsWithSegments("/employees"))
-        {
-            await context.Response.WriteAsync("GET /employees\r\n");
-            foreach (var emp in EmployeesRepository.GetEmployees())
-            {
-                await context.Response.WriteAsync($"{emp.Name}: {emp.Position}\r\n");
-            }
-        }
+        await context.Response.WriteAsync($"{context.Request.Path}/{context.Request.Method}");
     }
-    else if (context.Request.Method == "POST")
+    else if (context.Request.Path.StartsWithSegments("/employees"))
     {
-        if (context.Request.Path.StartsWithSegments("/employees"))
+        switch(context.Request.Method)
         {
-            using var reader = new StreamReader(context.Request.Body);
-            string body = await reader.ReadToEndAsync();                            // json string
-            Employee? employee = JsonSerializer.Deserialize<Employee>(body);
-            if (employee != null) 
-            { 
-                EmployeesRepository.AddEmployee(employee);
-                await context.Response.WriteAsync($"\r\n{employee.Name}: {employee.Position} Added");
-            }
-            else
+            case "GET":
             {
-                await context.Response.WriteAsync($"\r\nError - Unable to Deserialize employee from HTTP Body - Create");
+                await context.Response.WriteAsync("GET /employees\r\n");
+                foreach (var emp in EmployeesRepository.GetEmployees())
+                {
+                    await context.Response.WriteAsync($"{emp.Name}: {emp.Position}\r\n");
+                }
+                break;
             }
-        }
-    }
-    else if (context.Request.Method == "PUT")
-    {
-        if (context.Request.Path.StartsWithSegments("/employees"))
-        {
-            using var reader = new StreamReader(context.Request.Body);
-            string body = await reader.ReadToEndAsync();                            // json string
-            Employee? employee = JsonSerializer.Deserialize<Employee>(body);
-            if (employee != null)
+            case "POST":
             {
-                if (EmployeesRepository.FindById(employee.Id) == null)
-                {                    
-                    await context.Response.WriteAsync($"\r\nError - {employee.Id}: ID valued employee unavailable");
+                using var reader = new StreamReader(context.Request.Body);
+                string body = await reader.ReadToEndAsync();                            // json string
+                Employee? employee = JsonSerializer.Deserialize<Employee>(body);
+                if (employee != null)
+                {
+                    EmployeesRepository.AddEmployee(employee);
+                    await context.Response.WriteAsync($"\r\n{employee.Name}: {employee.Position} Added");
                 }
                 else
                 {
-                    EmployeesRepository.UpdateEmployee(employee);
-                    await context.Response.WriteAsync($"\r\n{employee.Name}: {employee.Position} Updated");
-                }                
+                    await context.Response.WriteAsync($"\r\nError - Unable to Deserialize employee from HTTP Body - Create");
+                }
+                break;
             }
-            else
+            case "PUT":
             {
-                await context.Response.WriteAsync($"\r\nError - Unable to Deserialize employee from HTTP Body - Update");
-            }
-        }
-    }
-    else if (context.Request.Method == "DELETE")
-    {
-        if (context.Request.Path.StartsWithSegments("/employees"))
-        {        
-            if (context.Request.Headers["Authorization"] != "Buddhika")
-            {
-                await context.Response.WriteAsync($"\r\nError - You are unauthorised to DELETE");                
-            }
-            else if (context.Request.Query.ContainsKey("id") &&
-                int.TryParse(context.Request.Query["id"], out int id))
-            {
-                var employee = EmployeesRepository.FindById(id);
-                if (employee == null)
+                using var reader = new StreamReader(context.Request.Body);
+                string body = await reader.ReadToEndAsync();                            // json string
+                Employee? employee = JsonSerializer.Deserialize<Employee>(body);
+                if (employee != null)
                 {
-                    await context.Response.WriteAsync($"\r\nError - {id}: ID valued employee unavailable");
+                    if (EmployeesRepository.FindById(employee.Id) == null)
+                    {
+                        await context.Response.WriteAsync($"\r\nError - {employee.Id}: ID valued employee unavailable");
+                    }
+                    else
+                    {
+                        EmployeesRepository.UpdateEmployee(employee);
+                        await context.Response.WriteAsync($"\r\n{employee.Name}: {employee.Position} Updated");
+                    }
                 }
                 else
                 {
-                    EmployeesRepository.DeleteEmployee(id);
-                    await context.Response.WriteAsync($"\r\n{employee.Name}: {employee.Position} Deleted");
+                    await context.Response.WriteAsync($"\r\nError - Unable to Deserialize employee from HTTP Body - Update");
                 }
-            }
-            else
+                break;
+            }                   
+            case "DELETE":
             {
-                await context.Response.WriteAsync($"\r\nError - Unable to extract ID value from query string - DELETE");
+                if (context.Request.Path.StartsWithSegments("/employees"))
+                {
+                    if (context.Request.Headers["Authorization"] != "Buddhika")
+                    {
+                        await context.Response.WriteAsync($"\r\nError - You are unauthorised to DELETE");
+                    }
+                    else if (context.Request.Query.ContainsKey("id") &&
+                        int.TryParse(context.Request.Query["id"], out int id))
+                    {
+                        var employee = EmployeesRepository.FindById(id);
+                        if (employee == null)
+                        {
+                            await context.Response.WriteAsync($"\r\nError - {id}: ID valued employee unavailable");
+                        }
+                        else
+                        {
+                            EmployeesRepository.DeleteEmployee(id);
+                            await context.Response.WriteAsync($"\r\n{employee.Name}: {employee.Position} Deleted");
+                        }
+                    }
+                    else
+                    {
+                        await context.Response.WriteAsync($"\r\nError - Unable to extract ID value from query string - DELETE");
+                    }
+                }                        
+                break; 
             }
-        }
+            default:
+            {
+                await context.Response.WriteAsync("Unknown HTTP REQUEST METHOD");
+                break;
+            }
+        }            
     }
-
-
+    else
+    {
+        await context.Response.WriteAsync($"Location: {context.Request.Path}");
+    }  
 
 });
 
