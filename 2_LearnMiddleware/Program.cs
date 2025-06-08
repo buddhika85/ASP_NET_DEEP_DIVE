@@ -1,6 +1,16 @@
+using _2_LearnMiddleware.MiddlewareComponenets;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// register middleware with in DI
+builder.Services.AddTransient<MyCustomMiddleware>();
+builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+
+
 var app = builder.Build();
 
+// exception handling middleware should be called first on the pipe line to catch any exception thrown in down the pipeline
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // creating a middleware #1
 app.Use(async (HttpContext context, RequestDelegate next) =>
@@ -14,16 +24,13 @@ app.Use(async (HttpContext context, RequestDelegate next) =>
 });
 
 
-// creating a middleware #2
-app.Use(async (HttpContext context, RequestDelegate next) =>
-{
-    await context.Response.WriteAsync("Middleware #2: Before calling next\r\n");
+//// creating a middleware #2
+//app.Run(async (HttpContext context) =>                  // does not take parameter RequestDelegate next
+//{
+//    await context.Response.WriteAsync("Middleware #2: Processed. NOT CALL NEXT.\r\n");
+//});
 
-    // calling next middleware
-    //await next(context);              // short circuiting 
-
-    await context.Response.WriteAsync("Middleware #2: After calling next\r\n");
-});
+app.UseMiddleware<MyCustomMiddleware>();
 
 
 // creating a middleware #3
@@ -33,6 +40,7 @@ app.Use(async (HttpContext context, RequestDelegate next) =>
 
     // calling next middleware
     await next(context);
+    throw new Exception("Exception thrown from middleware 3");
 
     await context.Response.WriteAsync("Middleware #3: After calling next\r\n");
 });
