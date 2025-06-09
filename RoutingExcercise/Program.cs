@@ -1,4 +1,5 @@
 using RoutingExcercise.MiddlewareComponents;
+using RoutingExcercise.Models;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
