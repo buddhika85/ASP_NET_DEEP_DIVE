@@ -1,7 +1,13 @@
+using RoutingExcercise.MiddlewareComponents;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<ExceptionMiddleware>();   // register middleware
+
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();           // use middleware
 
 app.MapGet("/", () => "Employee CRUD - Root");
 
@@ -89,6 +95,12 @@ app.MapPut("/Employee", async (HttpContext context) =>
 
 app.MapDelete("/Employee/{id:int}", async (HttpContext context) =>
 {
+    if (context.Request.Headers["Authorization"] != "Buddhika")
+    {
+        context.Response.StatusCode = 403;
+        await context.Response.WriteAsync("Error - You do not have DELETION rights");
+        return;
+    }
     var id = Convert.ToInt32(context.Request.RouteValues["id"]);    
     EmployeesRepository.DeleteEmployee(id);
     await context.Response.WriteAsync("Employee Deleted");
