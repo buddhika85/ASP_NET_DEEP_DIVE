@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3_Routing", "3_Routing\3_Ro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoutingExcercise", "RoutingExcercise\RoutingExcercise.csproj", "{6AED74C1-B29A-4398-952F-933BA1AD0AF2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4_ModelBinding", "4_ModelBinding\4_ModelBinding.csproj", "{62420456-ED42-4F18-A97F-332B81D34D2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{6AED74C1-B29A-4398-952F-933BA1AD0AF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AED74C1-B29A-4398-952F-933BA1AD0AF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6AED74C1-B29A-4398-952F-933BA1AD0AF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62420456-ED42-4F18-A97F-332B81D34D2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62420456-ED42-4F18-A97F-332B81D34D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62420456-ED42-4F18-A97F-332B81D34D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62420456-ED42-4F18-A97F-332B81D34D2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
