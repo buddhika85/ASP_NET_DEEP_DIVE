@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoutingExcercise", "Routing
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4_ModelBinding", "4_ModelBinding\4_ModelBinding.csproj", "{62420456-ED42-4F18-A97F-332B81D34D2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelBindingExcercise", "ModelBindingExcercise\ModelBindingExcercise.csproj", "{668F2FC1-6FE4-49D7-9C87-F17134810AA5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{62420456-ED42-4F18-A97F-332B81D34D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62420456-ED42-4F18-A97F-332B81D34D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62420456-ED42-4F18-A97F-332B81D34D2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{668F2FC1-6FE4-49D7-9C87-F17134810AA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{668F2FC1-6FE4-49D7-9C87-F17134810AA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{668F2FC1-6FE4-49D7-9C87-F17134810AA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{668F2FC1-6FE4-49D7-9C87-F17134810AA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
