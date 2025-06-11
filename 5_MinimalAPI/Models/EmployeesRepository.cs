@@ -2,16 +2,24 @@ using MinimalAPI.Models;
 
 static class EmployeesRepository
 {
-    private static List<Employee> employees = new List<Employee>
+    private static int id = 0;
+    private static List<Employee> employees = new List<Employee>();
+
+    static EmployeesRepository()
     {
-        new Employee(1, "John Doe", "Engineer", 60000),
-        new Employee(2, "Jane Smith", "Manager", 75000),
-        new Employee(3, "Sam Brown", "Technician", 50000),
-        new Employee(3, "John Doe", "Technician", 50000)
-    };
+        AddEmployee(new Employee("John Doe", "Engineer", 60000));
+        AddEmployee(new Employee("Jane Smith", "Manager", 75000));
+        AddEmployee(new Employee("Sam Brown", "Technician", 50000));
+        AddEmployee(new Employee("John Doe", "Technician", 50000));
+    }
+    
 
     public static List<Employee> GetEmployees() => employees;
-    public static void AddEmployee(Employee employee) => employees.Add(employee);
+    public static void AddEmployee(Employee employee)
+    {
+        employee.Id = ++id;
+        employees.Add(employee);
+    }
     public static void UpdateEmployee(Employee employee)
     {
         var employeeToUpdate = FindById(employee.Id);
@@ -28,6 +36,12 @@ static class EmployeesRepository
     public static void DeleteEmployee(int id)
     {
         var employee = FindById(id);
+        if (employee != null)
+            employees.Remove(employee);
+    }
+
+    public static void DeleteEmployee(Employee employee)
+    {
         if (employee != null)
             employees.Remove(employee);
     }

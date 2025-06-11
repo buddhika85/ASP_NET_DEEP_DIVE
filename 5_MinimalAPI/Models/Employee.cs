@@ -17,9 +17,8 @@ public class Employee
     [Range(1000, 100000)]
     public double Salary { get; set; }
 
-    public Employee(int id, string name, string position, double salary)
-    {
-        Id = id;
+    public Employee(string name, string position, double salary)
+    {      
         Name = name;
         Position = position;
         Salary = salary;
