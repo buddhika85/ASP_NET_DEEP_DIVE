@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using _6_MinimalAPI_DI_CodeOrganization.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace _6_MinimalAPI_DI_CodeOrganization.ValidationAttributes
 {
