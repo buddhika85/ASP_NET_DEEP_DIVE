@@ -1,7 +1,5 @@
 using _6_MinimalAPI_DI_CodeOrganization.Endpoints;
-using _6_MinimalAPI_DI_CodeOrganization.Models;
 using _6_MinimalAPI_DI_CodeOrganization.Results;
-using Microsoft.AspNetCore.Mvc;
 
 
 var builder = WebApplication.CreateBuilder(args);
