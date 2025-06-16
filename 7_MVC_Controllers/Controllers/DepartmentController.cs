@@ -9,15 +9,20 @@ namespace _7_MVC_Controllers.Controllers
     {
 
         [HttpGet("departments")]
-        public string GetDepartments()
+        public IActionResult GetDepartments()
         {
-            return "These are the deparments";
+            return new ContentResult
+            {
+                Content = "These are the deparments",
+                ContentType = "text/plain",
+                StatusCode = 200
+            };
         }
 
         [HttpGet("departments/{id:int}")]
-        public string GetDepartmentById([FromRoute] int id)
+        public IActionResult GetDepartmentById([FromRoute] int id)
         {
-            return $"Department info: {id}";
+            return new JsonResult(new Department { Id = id, Description = "Accounts", Name = "Accounts" });
         }
 
 
