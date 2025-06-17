@@ -1,4 +1,5 @@
-﻿using _10_MinimalAPI___FIlter_Pipeline.Models;
+﻿using _10_MinimalAPI___FIlter_Pipeline.Filters;
+using _10_MinimalAPI___FIlter_Pipeline.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace _10_MinimalAPI___FIlter_Pipeline.Endpoints;
@@ -54,16 +55,6 @@ public static class EmployeeEndpoints
 
         builder.MapPut("/Employee/{id:int}", ([FromRoute] int id, [FromBody] Employee employee, IEmployeesRepository employeesRepository) =>
         {
-            if (id <= 0 || employee.Id != id)
-            {
-                return Results.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    {
-                        "id", new [] { "Invalid Employee Id" }
-                    }
-                });
-            }
-
             var isExists = employeesRepository.IsExists(id);
             if (!isExists)
             {
@@ -77,7 +68,8 @@ public static class EmployeeEndpoints
 
             employeesRepository.UpdateEmployee(employee);
             return TypedResults.NoContent();
-        }).WithParameterValidation();
+        }).WithParameterValidation()
+        .AddEndpointFilter<EmployeeUpdateFilter>();         // adding filter
 
         builder.MapDelete("/Employee/{id:int}", ([FromRoute] int id, IEmployeesRepository employeesRepository) =>
         {
