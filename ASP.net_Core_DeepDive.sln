@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "8_MVC_Views", "8_MVC_Views\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "10_MinimalAPI - FIlter Pipeline", "10_MinimalAPI - FIlter Pipeline\10_MinimalAPI - FIlter Pipeline.csproj", "{A1518676-6E09-4530-825C-3CF8F87A6C4E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "11_WebAPI_Controllers", "11_WebAPI_Controllers\11_WebAPI_Controllers.csproj", "{557FCA32-0417-44AC-9ECE-1CA503496D52}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{A1518676-6E09-4530-825C-3CF8F87A6C4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1518676-6E09-4530-825C-3CF8F87A6C4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1518676-6E09-4530-825C-3CF8F87A6C4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{557FCA32-0417-44AC-9ECE-1CA503496D52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{557FCA32-0417-44AC-9ECE-1CA503496D52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{557FCA32-0417-44AC-9ECE-1CA503496D52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{557FCA32-0417-44AC-9ECE-1CA503496D52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
