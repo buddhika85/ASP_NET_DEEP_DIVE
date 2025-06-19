@@ -11,6 +11,12 @@ var app = builder.Build();
 
 app.MapOpenApi();                   // Apply Open API middleware to pipeline
 
+app.UseSwaggerUI(options =>
+{
+    // point swagger to OPEN API generated Json file
+    options.SwaggerEndpoint("openAPI/v1.json", "Employee Management Endpoints");
+});
+
 app.MapGet("/", () => "Filter Pipeline Demo");
 
 app.AddEmployeeEndPoints();
