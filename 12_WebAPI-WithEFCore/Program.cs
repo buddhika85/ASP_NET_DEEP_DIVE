@@ -1,0 +1,29 @@
+using _12_WebAPI_WithEFCore.Data;
+using _12_WebAPI_WithEFCore.Models.Repositories;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<CompanyDbContext>(options =>
+{
+    // use SQL Server
+    // use connection string with name 'Default' coming from AppSettings.json
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+});
+
+builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
