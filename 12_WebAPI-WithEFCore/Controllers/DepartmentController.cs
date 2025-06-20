@@ -11,8 +11,10 @@ public class DepartmentController : ControllerBase
 {
     private readonly IDepartmentRepository departmentRepository;
 
-    public DepartmentController(IDepartmentRepository departmentRepository)
+    public DepartmentController(IConfiguration config, IDepartmentRepository departmentRepository)
     {
+        //var showNewData = bool.Parse(config["DisplaySettings:ShowNewData"]);
+
         this.departmentRepository = departmentRepository;
     }
 
@@ -77,6 +79,7 @@ public class DepartmentController : ControllerBase
         if (!departmentRepository.IsExists(id))
         {
             return Results.ValidationProblem(new Dictionary<string, string[]> { { "id", new string[] { $"Department with id {id} unavailable" } } }, statusCode: 404);
+            //return Results.Problem(new ProblemDetails { Detail = $"Department with id {id} unavailable", Title = "Not FOund", Status = 404 });
         }
         departmentRepository.DeleteDepartment(id);
         return TypedResults.Ok();

@@ -18,6 +18,9 @@ builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
 builder.Services.AddControllers();
 
+//bool showNewData = bool.Parse( builder.Configuration["ShowNewData"] );
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -25,5 +28,8 @@ var app = builder.Build();
 app.UseAuthorization();
 
 app.MapControllers();
+
+
+//bool showNewData = bool.Parse(app.Configuration["ShowNewData"]);
 
 app.Run();

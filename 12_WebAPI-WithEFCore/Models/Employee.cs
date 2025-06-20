@@ -1,6 +1,7 @@
 ﻿using _12_WebAPI_WithEFCore.Data;
 using _12_WebAPI_WithEFCore.ValidationAttributes;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace _12_WebAPI_WithEFCore.Models;
 
@@ -25,6 +26,7 @@ public class Employee
 
 
     // nagivation property
+    [JsonIgnore]
     public virtual Department? Department { get; set; }
 
 }
