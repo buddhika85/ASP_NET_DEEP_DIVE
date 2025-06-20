@@ -1,5 +1,7 @@
-﻿using _12_WebAPI_WithEFCore.Models.Repositories;
+﻿using _12_WebAPI_WithEFCore.Data;
+using _12_WebAPI_WithEFCore.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace _12_WebAPI_WithEFCore.Controllers;
 
@@ -20,7 +22,7 @@ public class DepartmentController : ControllerBase
         return TypedResults.Ok(departmentRepository.GetDepartments());
     }
 
-    [HttpGet("/{id:int}")]
+    [HttpGet("{id:int}")]
     public IResult Get([FromRoute] int id)
     {
         if (id <= 0)
@@ -43,5 +45,40 @@ public class DepartmentController : ControllerBase
         }
 
         return TypedResults.Ok(department);
+    }
+
+
+    [HttpPost]
+    public IResult Create([FromBody] Department department)
+    {
+        if (department == null)
+        {
+            return Results.ValidationProblem(new Dictionary<string, string[]> { { "department", new string[] { "Did not provide a department" } } }, statusCode: 400);
+        }
+
+        departmentRepository.AddDepartment(department);
+        return TypedResults.Created(uri: $"api/Department/{department.Id}", department);
+    }
+
+    [HttpPut("{id:int}")]
+    public IResult Update([FromRoute] int id, [FromBody] Department department)
+    {
+        if (!departmentRepository.IsExists(id))
+        {
+            return Results.ValidationProblem(new Dictionary<string, string[]> { { "id", new string[] { $"Department with ID {id} unavailable" } } }, statusCode: 404);
+        }
+        departmentRepository.UpdateDepartment(department);
+        return TypedResults.NoContent();
+    }
+
+    [HttpDelete("{id:int}")]
+    public IResult Delete([FromRoute] int id)
+    {
+        if (!departmentRepository.IsExists(id))
+        {
+            return Results.ValidationProblem(new Dictionary<string, string[]> { { "id", new string[] { $"Department with id {id} unavailable" } } }, statusCode: 404);
+        }
+        departmentRepository.DeleteDepartment(id);
+        return TypedResults.Ok();
     }
 }
