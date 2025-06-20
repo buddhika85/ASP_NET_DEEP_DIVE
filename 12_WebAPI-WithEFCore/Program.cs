@@ -1,8 +1,17 @@
 using _12_WebAPI_WithEFCore.Data;
 using _12_WebAPI_WithEFCore.Models.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/log-.txt",
+        rollingInterval: RollingInterval.Day)       // daily a new file will be created
+    .CreateLogger();
+builder.Services.AddSerilog();
 
 builder.Services.AddDbContext<CompanyDbContext>(options =>
 {

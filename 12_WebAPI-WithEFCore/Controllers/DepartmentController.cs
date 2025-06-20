@@ -9,10 +9,14 @@ namespace _12_WebAPI_WithEFCore.Controllers;
 [ApiController]
 public class DepartmentController : ControllerBase
 {
+    private readonly ILogger<DepartmentController> logger;
     private readonly IDepartmentRepository departmentRepository;
 
-    public DepartmentController(IConfiguration config, IDepartmentRepository departmentRepository)
+    public DepartmentController(ILogger<DepartmentController> logger, IConfiguration config, IDepartmentRepository departmentRepository)
     {
+        this.logger = logger;
+
+
         //var showNewData = bool.Parse(config["DisplaySettings:ShowNewData"]);
 
         this.departmentRepository = departmentRepository;
@@ -21,6 +25,7 @@ public class DepartmentController : ControllerBase
     [HttpGet]
     public IResult GetAll()
     {
+        logger.LogInformation("Get All Departments {user} at {time}", "Jim", DateTime.Now);
         return TypedResults.Ok(departmentRepository.GetDepartments());
     }
 
